@@ -7,6 +7,7 @@
     "dev": "cross-env NODE_ENV=development PORT=2000 nodemon"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cookie-parser": "~1.4.4",
     "cross-env": "^7.0.3",
     "debug": "~2.6.9",
@@ -16,7 +17,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mongoose": "^6.2.8",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
