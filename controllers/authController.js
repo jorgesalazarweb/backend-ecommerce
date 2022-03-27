@@ -2,6 +2,7 @@
 
 const User = require('../models/User');
 const shortid = require('shortid');
+const jwt = require('jsonwebtoken');
 
 exports.signup = async (req, res, next) => {
   try {
@@ -38,9 +39,13 @@ exports.signin = async (req,res,next) =>{
       next(error);
       return;
   }
-    res.status(201).json({
-      message: 'OK'
-    })
+    jwt.sign({ _id:user._id },process.env.JWT_SECRET,{ expiresIn:'2h' },(err,jwtToken)=>{
+    if(err){
+        next(err);
+        return;
+    }
+    res.json({jwtToken: jwtToken});
+});
   } catch (err) {
     next(err);
   }
