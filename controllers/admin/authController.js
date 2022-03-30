@@ -1,15 +1,15 @@
 "use strict";
-const User = require('../models/User');
+
+const User = require('../../models/User');
 const shortid = require('shortid');
 const jwt = require('jsonwebtoken');
-
 
 exports.signup = async (req, res, next) => {
   try {
     const { email, firstName, password, lastName } = req.body;
     const user = await User.findOne({ email });
     if(user){
-        const error = new Error ('User already registered');
+        const error = new Error ('Admin already registered');
         error.status = 401;
         next(error);
         return;
@@ -20,7 +20,8 @@ exports.signup = async (req, res, next) => {
         lastName,
         email,
         hash_password,
-        username:shortid.generate()
+        username:shortid.generate(),
+        role:'admin'
     });
     const userCreated = await _user.save();
     res.status(201).json({ result: userCreated });
@@ -33,12 +34,12 @@ exports.signin = async (req,res,next) =>{
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if(!user || !(await user.comparePassword(password))){
+    if(!user || !(await user.comparePassword(password)) && user.role !== 'admin' ){
       const error = new Error('Invalid credentials');
       error.status = 401;
       next(error);
       return;
-  }
+    }
     jwt.sign({ _id:user._id },process.env.JWT_SECRET,{ expiresIn:'2h' },(err,jwtToken)=>{
     if(err){
         next(err);
